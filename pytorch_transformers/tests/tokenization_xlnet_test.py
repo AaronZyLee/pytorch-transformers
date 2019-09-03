@@ -35,8 +35,8 @@ class XLNetTokenizationTest(CommonTestCases.CommonTokenizerTester):
         tokenizer = XLNetTokenizer(SAMPLE_VOCAB, keep_accents=True)
         tokenizer.save_pretrained(self.tmpdirname)
 
-    def get_tokenizer(self):
-        return XLNetTokenizer.from_pretrained(self.tmpdirname)
+    def get_tokenizer(self, **kwargs):
+        return XLNetTokenizer.from_pretrained(self.tmpdirname, **kwargs)
 
     def get_input_output_texts(self):
         input_text = u"This is a test"
@@ -88,6 +88,18 @@ class XLNetTokenizationTest(CommonTestCases.CommonTokenizerTester):
                                       u'n', SPIECE_UNDERLINE + u'in', SPIECE_UNDERLINE + u'',
                                       u'9', u'2', u'0', u'0', u'0', u',', SPIECE_UNDERLINE + u'and', SPIECE_UNDERLINE + u'this',
                                       SPIECE_UNDERLINE + u'is', SPIECE_UNDERLINE + u'f', u'al', u'se', u'.'])
+
+    def test_sequence_builders(self):
+        tokenizer = XLNetTokenizer.from_pretrained("xlnet-base-cased")
+
+        text = tokenizer.encode("sequence builders")
+        text_2 = tokenizer.encode("multi-sequence build")
+
+        encoded_sentence = tokenizer.add_special_tokens_single_sentence(text)
+        encoded_pair = tokenizer.add_special_tokens_sentences_pair(text, text_2)
+
+        assert encoded_sentence == text + [4, 3]
+        assert encoded_pair == text + [4] + text_2 + [4, 3]
 
 
 if __name__ == '__main__':

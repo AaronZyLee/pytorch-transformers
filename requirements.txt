@@ -12,3 +12,4 @@ regex
 sentencepiece
 # For XLM
 sacremoses
+pytorch-transformers

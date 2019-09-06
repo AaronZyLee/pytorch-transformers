@@ -173,6 +173,7 @@ def main():
             # Models with memory likes to have a long prompt for short inputs.
             raw_text = (args.padding_text if args.padding_text else PADDING_TEXT) + raw_text
         context_tokens = tokenizer.encode(raw_text)
+        print("debug: ", context_tokens)
         out = sample_sequence(
             model=model,
             context=context_tokens,

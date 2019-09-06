@@ -22,8 +22,8 @@
           --model_name openai-gpt \
           --do_train \
           --do_eval \
-          --train_dataset ../../scripts/training_data.csv \
-          --eval_dataset ../../scripts/validating_data.csv \
+          --train_dataset ../../ROCStories/train.csv \
+          --eval_dataset ../../ROCStories/val.csv \
           --output_dir ../log \
           --train_batch_size 16 \
 """

@@ -138,6 +138,7 @@ def main():
     parser.add_argument("--prompt", type=str, default="")
     parser.add_argument("--padding_text", type=str, default="")
     parser.add_argument("--length", type=int, default=20)
+    parser.add_argument("--iter", type=int, default=10)
     parser.add_argument("--temperature", type=float, default=1.0)
     parser.add_argument("--top_k", type=int, default=0)
     parser.add_argument("--top_p", type=float, default=0.9)
@@ -167,13 +168,11 @@ def main():
         args.length = MAX_LENGTH  # avoid infinite loop
 
     print(args)
-    while True:
-        raw_text = args.prompt if args.prompt else input("Model prompt >>> ")
-        if args.model_type in ["transfo-xl", "xlnet"]:
-            # Models with memory likes to have a long prompt for short inputs.
-            raw_text = (args.padding_text if args.padding_text else PADDING_TEXT) + raw_text
+    iter=0
+    raw_text='Nathan: I am sorry, but why?' + '\n'+ 'Han: Because somebody said so.'+ '\n' + 'Octavia Esmond (aka. Tyl): I do not understand. Maybe you should not think about it anymore.' + '\n' + 'Fionn & Ollie: Freedom is the best'
+    while iter<args.iter:
+        # raw_text = args.prompt if args.prompt else input("Model prompt >>> ")
         context_tokens = tokenizer.encode(raw_text)
-        print("debug: ", context_tokens)
         out = sample_sequence(
             model=model,
             context=context_tokens,
@@ -189,6 +188,11 @@ def main():
         print(text)
         if args.prompt:
             break
+        raw_text += text
+        iter+=1
+    with open('output.txt', 'w') as f:
+        f.write(raw_text)
+        f.close()
     return text
 
 
